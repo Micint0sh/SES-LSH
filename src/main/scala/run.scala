@@ -66,8 +66,17 @@ object loadDataset {
     result
   }
 
+  /*
+   * File format:
+   * first line contains two int: #queries and k, separated by a space
+   * each of the rest lines contains the result for one query, in the format of:
+   * id1 dist1 id2 dist2 id3 dist3 ...
+   */
   def writeKNNResult(path: String, results:Array[Array[(Long, Double)]]): Unit = {
     val writer = new PrintWriter(path)
+    writer.print(results.length)
+    writer.print(" ")
+    writer.println(results(0).length)
     results.foreach(
       res => {
         res.foreach( tup => {
