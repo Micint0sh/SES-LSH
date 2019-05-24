@@ -22,7 +22,7 @@ object loadDataset {
     var indexArray = Array.empty[Int]
     var dataArray = Array.empty[Double]
     for(i <- 1 to dim) {
-      val thisData = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
+      val thisData: Double = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
       if (thisData != 0) {
         indexArray = indexArray :+ (i-1)
         dataArray = dataArray :+ thisData
@@ -44,7 +44,7 @@ object loadDataset {
     var indexArray = Array.empty[Int]
     var dataArray = Array.empty[Double]
     for(i <- 1 to dim) {
-      val thisData = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
+      val thisData:Double = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
       if (thisData != 0) {
         indexArray = indexArray :+ (i-1)
         dataArray = dataArray :+ thisData
