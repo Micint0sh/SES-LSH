@@ -20,7 +20,7 @@ package edu.berkeley.cs.amplab.spark.indexedrdd
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.Table
 import lsh.L2
-import utils.ImageIO
+//import utils.ImageIO
 
 import scala.reflect.ClassTag
 
