@@ -1,14 +1,120 @@
 // Read the dataset
 
-package run
-
 import lsh.LSH
+import java.lang.System.currentTimeMillis
+import java.nio.file.{Files, Paths}
+import java.nio.{ByteBuffer, ByteOrder}
+import java.io._
 
-val startTime = System.currentTimeMillis()
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.linalg.Vector
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.rdd.RDD
 
-lshModel = LSH.train(dataset, dim, numHashFunctions, numHashTables, binLength)
+object loadDataset {
 
-println(s"cost ${(System.currentTimeMillis() - startTime) / 1000}s to train")
+  val SIZE_INT = 4
 
-queries.foreach(query => LSH.kNNSearch(lshModel, dataset, query, k))
+  private def parseIdvecs(expectedDim: Int)(bytes: Array[Byte]) : (Long, Vector) = {
+    val dim = ByteBuffer.wrap(bytes.slice(0, SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getInt
+    assert(dim == expectedDim, s"Dimensions in idvecs file not uniform, expected $expectedDim, got $dim")
+    val id = ByteBuffer.wrap(bytes.slice((dim+1)*SIZE_INT, (dim+2)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getInt
+    var indexArray = Array.empty[Int]
+    var dataArray = Array.empty[Double]
+    for(i <- 1 to dim) {
+      val thisData = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
+      if (thisData != 0) {
+        indexArray = indexArray :+ (i-1)
+        dataArray = dataArray :+ thisData
+      }
+    }
+    val result = Vectors.sparse(indexArray.length, indexArray, dataArray)
+    (id, result)
+  }
+
+  def loadIdvecsDataSet(sc: SparkContext, path:String, dimension:Int) : RDD[(Long, Vector)] = {
+    val bin_record = sc.binaryRecords(path, 4*(dimension+2))
+    val data = bin_record.map(parseIdvecs(dimension))
+    data
+  }
+
+  private def parseFvecs(expectedDim: Int)(bytes: Array[Byte]) : Vector = {
+    val dim = ByteBuffer.wrap(bytes.slice(0, SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getInt
+    assert(dim == expectedDim, s"Dimensions in fvecs file not uniform, expected $expectedDim, got $dim")
+    var indexArray = Array.empty[Int]
+    var dataArray = Array.empty[Double]
+    for(i <- 1 to dim) {
+      val thisData = ByteBuffer.wrap(bytes.slice(i*SIZE_INT, (i+1)*SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getFloat
+      if (thisData != 0) {
+        indexArray = indexArray :+ (i-1)
+        dataArray = dataArray :+ thisData
+      }
+    }
+    val result = Vectors.sparse(indexArray.length, indexArray, dataArray)
+    result
+  }
+
+  def loadFvecsLocal(path: String): Array[Vector] = {
+    val bytes = Files.readAllBytes(Paths.get(path))
+    val dim = ByteBuffer.wrap(bytes.slice(0, SIZE_INT)).order(ByteOrder.LITTLE_ENDIAN).getInt
+    val lenPerEntry = SIZE_INT * (dim + 1)
+    assert(bytes.length % lenPerEntry == 0, s"File length (${bytes.length}) not divisible by entry length ($lenPerEntry).")
+    val result = Array.ofDim[Vector](bytes.length/lenPerEntry)
+    for (i <- 0 until bytes.length/lenPerEntry) {
+      result(i) = parseFvecs(dim)(bytes.slice(i*lenPerEntry, (i+1)*lenPerEntry))
+    }
+    result
+  }
+
+  def writeKNNResult(path: String, results:Array[Array[(Long, Double)]]): Unit = {
+    val writer = new PrintWriter(path)
+    results.foreach(
+      res => {
+        res.foreach( tup => {
+          writer.print(tup._1)
+          writer.print(" ")
+          writer.print(tup._2)
+          writer.print(" ")
+        }
+        )
+        writer.println()
+      }
+    )
+  }
+}
+
+object Run {
+  def main(args: Array[String]): Unit = {
+    if (args.length != 5) {
+      println(
+        """Usage: [path to dataset file] [path to query file] [output path] [dimension]
+                  |[num hash func] [num hash table] [bin length] [k]""".stripMargin)
+      System.exit(0)
+    }
+
+    val dataSetPath = args(0)
+    val queryPath = args(1)
+    val oututPath = args(2)
+    val dimension = args(3).toInt
+    val numHashFunctions = args(4).toInt
+    val numHashTables = args(5).toInt
+    val binLength = args(6).toInt
+    val k = args(7).toInt
+
+    val startTime = currentTimeMillis()
+
+    // read dataset
+    val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
+    val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
+
+    // train lsh model
+    val lshModel = LSH.train(dataset, dimension, numHashFunctions, numHashTables, binLength)
+    println(s"cost ${(currentTimeMillis() - startTime) / 1000}s to train")
+
+    //load queries
+    val queries = loadDataset.loadFvecsLocal(queryPath)
+    val answer = queries.map(query => LSH.kNNSearch(lshModel, dataset, query, k)) // type Array[Array[Long, Double]]
+    loadDataset.writeKNNResult(oututPath, answer)
+  }
+}
 
