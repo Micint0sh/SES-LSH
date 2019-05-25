@@ -4,6 +4,7 @@ import edu.berkeley.cs.amplab.spark.indexedrdd.IndexedRDD
 import edu.berkeley.cs.amplab.spark.indexedrdd.IndexedRDD._
 import kafka.serializer.StringDecoder
 import org.apache.spark.streaming.kafka010._
+import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.{Seconds, StreamingContext}
