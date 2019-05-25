@@ -112,10 +112,12 @@ object Main extends App {
 
     val startTime = currentTimeMillis()
 
+    println("Reading dataset...")
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
 
+    println("Training model...")
     // train lsh model
     val lshModel = LSH.train(dataset, dimension, numHashFunctions, numHashTables, binLength)
     println(s"cost ${(currentTimeMillis() - startTime) / 1000}s to train")
