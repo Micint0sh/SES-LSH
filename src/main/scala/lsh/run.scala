@@ -92,8 +92,7 @@ object loadDataset {
   }
 }
 
-object Run {
-  def main(args: Array[String]): Unit = {
+object Main extends App {
     if (args.length != 5) {
       println(
         """Usage: [path to dataset file] [path to query file] [output path] [dimension]
@@ -124,6 +123,5 @@ object Run {
     val queries = loadDataset.loadFvecsLocal(queryPath)
     val answer = queries.map(query => LSH.kNNSearch(lshModel, dataset, query, k)) // type Array[Array[Long, Double]]
     loadDataset.writeKNNResult(oututPath, answer)
-  }
 }
 
