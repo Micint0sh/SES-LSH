@@ -115,7 +115,6 @@ object Main extends App {
     println("Reading dataset...")
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
-    sc.setLogLevel("WARN")
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
 
     println("Training model...")
