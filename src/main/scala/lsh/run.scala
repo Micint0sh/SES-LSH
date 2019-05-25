@@ -1,15 +1,15 @@
 // Read the dataset
 
-import lsh.LSH
+package lsh
+
+import java.io._
 import java.lang.System.currentTimeMillis
 import java.nio.file.{Files, Paths}
 import java.nio.{ByteBuffer, ByteOrder}
-import java.io._
 
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.linalg.Vector
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.mllib.linalg.{Vector, Vectors}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
 
 object loadDataset {
 

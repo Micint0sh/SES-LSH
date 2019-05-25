@@ -1,4 +1,4 @@
-name := "Sample Project"
+name := "SES-LSH-RUN"
 
 version := "1.0"
 
