@@ -1,6 +1,6 @@
 spark-submit \
     --class lsh.Main \
-    --master proj99:38888 \
+    --master localhost:38888 \
     --deploy-mode client \
     /data/sydeng/repositary/hnsw-repo/SES-LSH/target/scala-2.10/ses-lsh-run_2.10-1.0.jar \
     hdfs://master:9000/sydeng7/sift100m/sift100m_base.idvecs \
