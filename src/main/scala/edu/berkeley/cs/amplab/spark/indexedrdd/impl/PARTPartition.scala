@@ -20,7 +20,7 @@ package edu.berkeley.cs.amplab.spark.indexedrdd.impl
 import scala.reflect.ClassTag
 import scala.collection.JavaConversions._
 
-import org.apache.spark.Logging
+import org.apache.spark.internal.Logging
 
 import edu.berkeley.cs.amplab.spark.indexedrdd._
 
