@@ -106,7 +106,7 @@ object Main extends App {
     val dimension = args(3).toInt
     val numHashFunctions = args(4).toInt
     val numHashTables = args(5).toInt
-    val binLength = args(6).toInt
+    val binLength = args(6).toDouble
     val k = args(7).toInt
 
     val startTime = currentTimeMillis()
