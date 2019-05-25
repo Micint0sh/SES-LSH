@@ -27,7 +27,8 @@ object loadDataset {
         dataArray = dataArray :+ thisData
       }
     }
-    val result = Vectors.sparse(indexArray.length, indexArray, dataArray)
+    assert(indexArray.length == dataArray.length, "Index length not equal to data length")
+    val result = Vectors.sparse(dim, indexArray, dataArray)
     (id, result)
   }
 
@@ -49,7 +50,8 @@ object loadDataset {
         dataArray = dataArray :+ thisData
       }
     }
-    val result = Vectors.sparse(indexArray.length, indexArray, dataArray)
+    assert(indexArray.length == dataArray.length, "Index length not equal to data length")
+    val result = Vectors.sparse(dim, indexArray, dataArray)
     result
   }
 
