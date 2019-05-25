@@ -93,7 +93,8 @@ object loadDataset {
 }
 
 object Main extends App {
-    if (args.length != 5) {
+    if (args.length != 8) {
+      println("Got " + args.length.toString + " arguments. Expected 8.")
       println(
         """Usage: [path to dataset file] [path to query file] [output path] [dimension]
                   |[num hash func] [num hash table] [bin length] [k]""".stripMargin)
