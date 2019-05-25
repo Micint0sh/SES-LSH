@@ -6,7 +6,6 @@ import java.io._
 import java.lang.System.currentTimeMillis
 import java.nio.file.{Files, Paths}
 import java.nio.{ByteBuffer, ByteOrder}
-
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
@@ -111,10 +110,10 @@ object Main extends App {
     val k = args(7).toInt
 
     val startTime = currentTimeMillis()
-
     println("Reading dataset...")
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
+    sc.setLogLevel("WARN")
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
 
     println("Training model...")
