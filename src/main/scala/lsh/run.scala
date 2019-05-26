@@ -29,7 +29,7 @@ object loadDataset {
     }
     assert(indexArray.length == dataArray.length, "Index length not equal to data length")
     val result = Vectors.sparse(dim, indexArray, dataArray)
-    (id, result)
+    (id.toLong, result)
   }
 
   def loadIdvecsDataSet(sc: SparkContext, path:String, dimension:Int) : RDD[(Long, Vector)] = {
