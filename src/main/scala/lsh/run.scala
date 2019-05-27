@@ -104,7 +104,7 @@ object Main extends App {
 
     val dataSetPath = args(0)
     val queryPath = args(1)
-    val oututPath = args(2)
+    val outputPath = args(2)
     val dimension = args(3).toInt
     val numHashFunctions = args(4).toInt
     val numHashTables = args(5).toInt
@@ -115,7 +115,12 @@ object Main extends App {
     println("Reading dataset...")
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
+
+    sc.setLogLevel("ERROR")
+
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
+
+    println("Dataset is of type " + dataset.getClass.toString)
 
     println("Training model...")
     // train lsh model
@@ -125,6 +130,6 @@ object Main extends App {
     //load queries
     val queries = loadDataset.loadFvecsLocal(queryPath)
     val answer = queries.map(query => LSH.kNNSearch(lshModel, dataset, query, k)) // type Array[Array[Long, Double]]
-    loadDataset.writeKNNResult(oututPath, answer)
+    loadDataset.writeKNNResult(outputPath, answer)
 }
 
