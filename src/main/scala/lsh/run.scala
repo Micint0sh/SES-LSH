@@ -116,7 +116,7 @@ object Main extends App {
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
 
-    sc.setLogLevel("ERROR")
+//    sc.setLogLevel("ERROR")
 
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
 
