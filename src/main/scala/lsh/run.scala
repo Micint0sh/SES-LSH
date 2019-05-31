@@ -135,7 +135,7 @@ object Main extends App {
 
     //load queries
     val queries = loadDataset.loadFvecsLocal(queryPath)
-    val answer = queries.map(query => LSH.kNNSearch(lshModel, dataset, query, k)) // type Array[Array[Long, Double]]
+    val answer = queries.map(query => LSH.kNNSearch(lshModel, dataset.asInstanceOf[RDD[(Long, Vector)]], query, k)) // type Array[Array[Long, Double]]
     loadDataset.writeKNNResult(outputPath, answer)
 }
 
