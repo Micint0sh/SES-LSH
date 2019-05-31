@@ -43,8 +43,8 @@ class LSHModel(val numHashFunctions: Int, val numHashTables: Int, val dimension:
 //  final var hashFunctions: List[(CosineHasher, Long)] = _hashFunctions.toList.zipWithIndex.map(x => (x._1, x._2.toLong))
 
   /** hashTables ((tableId, hashKey), vectorId) */
-//  var hashTables: IndexedRDD[String, List[Long]] = null
-  var hashTables: RDD[(String, List[Long])] = null
+  var hashTables: IndexedRDD[String, List[Long]] = null
+//  var hashTables: RDD[(String, List[Long])] = null
 
   /** computes hash value for a vector in each hashTable. Array(tableID, binID) */
   def hashValue(data: Vector): Array[String] = {
