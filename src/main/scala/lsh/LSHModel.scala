@@ -71,8 +71,7 @@ class LSHModel(val numHashFunctions: Int, val numHashTables: Int, val dimension:
     * */
   def getCandidates0(vec: Vector): Array[Long] = {
     val buckets = hashValue(vec)
-    val indexedHash: IndexedRDD[String, List[Long]] = IndexedRDD(hashTables)
-    val candidates = indexedHash.multiget(buckets).flatMap(x => x._2).toArray.distinct
+    val candidates = hashTables.asInstanceOf[IndexedRDD[String, List[Long]]].multiget(buckets).flatMap(x => x._2).toArray.distinct
     candidates
   }
 
