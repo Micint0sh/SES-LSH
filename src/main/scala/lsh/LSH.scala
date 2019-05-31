@@ -27,11 +27,11 @@ class LSH(data: RDD[(Long, Vector)], dimensions: Int, numHashFunctions: Int = 4,
 //    ).cache()
 
     // SLSH
-    model.hashTables = data
+    model.hashTables = IndexedRDD(data
         .map(v => (model.hashValue(v._2), v._1))
         .flatMap(x => x._1.map(a => (a, x._2)))
         .groupByKey()
-        .mapValues(_.toList).cache()
+        .mapValues(_.toList)).cache()
 
 //    println(s"${model.hashTables.partitions.length} partitions in hashTableRDD")
     println(s"${model.hashTables.count()} hashTables construct")
