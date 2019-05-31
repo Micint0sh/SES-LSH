@@ -103,7 +103,7 @@ class IndexedRDD[K: ClassTag, V: ClassTag](
         } else {
           Array.empty
         }
-      }, partitions)
+      }, partitions, allowLocal = true)
     results.flatten.toMap
   }
 
