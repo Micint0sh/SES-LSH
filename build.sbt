@@ -7,7 +7,7 @@ scalaVersion := "2.11.7"
 //resolvers += "Spark Packages Repo" at "https://dl.bintray.com/spark-packages/maven"
 resolvers += "Repo at github.com/ankurdave/maven-repo" at "https://github.com/ankurdave/maven-repo/raw/master"
 
-libraryDependencies += "com.ankurdave" %% "part" % "0.1"
+libraryDependencies += "com.ankurdave" % "part_2.10" % "0.1"
 libraryDependencies += "amplab" % "spark-indexedrdd" % "0.3"
 
 libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.3"
