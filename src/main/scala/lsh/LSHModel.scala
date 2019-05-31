@@ -43,8 +43,8 @@ class LSHModel(val numHashFunctions: Int, val numHashTables: Int, val dimension:
 //  final var hashFunctions: List[(CosineHasher, Long)] = _hashFunctions.toList.zipWithIndex.map(x => (x._1, x._2.toLong))
 
   /** hashTables ((tableId, hashKey), vectorId) */
-  var hashTables: IndexedRDD[String, List[Long]] = null
-//  var hashTables: RDD[(String, List[Long])] = null
+//  var hashTables: IndexedRDD[String, List[Long]] = null
+  var hashTables: RDD[(String, List[Long])] = null
 
   /** computes hash value for a vector in each hashTable. Array(tableID, binID) */
   def hashValue(data: Vector): Array[String] = {
@@ -71,7 +71,8 @@ class LSHModel(val numHashFunctions: Int, val numHashTables: Int, val dimension:
     * */
   def getCandidates0(vec: Vector): Array[Long] = {
     val buckets = hashValue(vec)
-    val candidates = hashTables.asInstanceOf[IndexedRDD[String, List[Long]]].multiget(buckets).flatMap(x => x._2).toArray.distinct
+    val indexedHash: IndexedRDD[String, List[Long]] = IndexedRDD(hashTables)
+    val candidates = indexedHash.multiget(buckets).flatMap(x => x._2).toArray.distinct
     candidates
   }
 
