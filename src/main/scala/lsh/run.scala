@@ -9,6 +9,8 @@ import java.nio.{ByteBuffer, ByteOrder}
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.log4j.{Level, Logger}
+
 
 object loadDataset {
 
@@ -116,7 +118,11 @@ object Main extends App {
     // read dataset
     val sc = new SparkContext(new SparkConf().setAppName("SES-LSH-RUN"))
 
-//    sc.setLogLevel("ERROR")
+    val rootLogger = Logger.getRootLogger()
+    rootLogger.setLevel(Level.ERROR)
+
+    Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+    Logger.getLogger("org.spark-project").setLevel(Level.WARN)
 
     val dataset = loadDataset.loadIdvecsDataSet(sc, dataSetPath, dimension)
 
