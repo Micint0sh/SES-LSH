@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.10.7"
 
-resolvers += "Spark Packages Repo" at "http://dl.bintray.com/spark-packages/maven"
+resolvers += "Spark Packages Repo" at "https://dl.bintray.com/spark-packages/maven"
 resolvers += "Repo at github.com/ankurdave/maven-repo" at "https://github.com/ankurdave/maven-repo/raw/master"
 
 libraryDependencies += "com.ankurdave" %% "part" % "0.1"
