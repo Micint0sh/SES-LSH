@@ -130,7 +130,7 @@ object Main extends App {
 
     println("Training model...")
     // train lsh model
-    val lshModel = LSH.train(dataset, dimension, numHashFunctions, numHashTables, binLength)
+    val lshModel = LSH.train(dataset.asInstanceOf[RDD[(Long, Vector)]], dimension, numHashFunctions, numHashTables, binLength)
     println(s"cost ${(currentTimeMillis() - startTime) / 1000}s to train")
 
     //load queries
